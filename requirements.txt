@@ -1,0 +1,8 @@
+langchain
+langchain-google-genai
+langchain-openai
+langgraph
+pyyaml
+python-dotenv
+requests
+matplotlib
