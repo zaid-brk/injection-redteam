@@ -115,14 +115,3 @@ python report.py             # writes results/asr_chart.png
 | `report.py` | Draws the baseline vs defended bar chart. |
 | `llm.py` | Switches between Gemini and OpenAI with one env variable. |
 | `selftest.py` | Offline checks for the parts that don't need an API key. |
-
-## Notes for myself
-
-Things I should be able to explain without looking: the difference between direct and
-indirect injection, why input sanitization fails on the indirect kind, why the secret check
-is a plain string match but the off-mission check needs a model, why I measured each defense
-separately, and why injection is not a solved problem.
-
-On the resume line, I'm describing this as inspired by published prompt-injection research
-(InjectAgent, OWASP LLM01, and the indirect-injection literature). I'm only naming a
-specific conference if I can actually talk about it.
