@@ -108,7 +108,7 @@ cp .env.example .env      # then paste a free key from https://aistudio.google.c
 ```
 
 `.env` defaults to Gemini (free, no card needed). To use OpenAI instead, set
-`LLM_PROVIDER=openai` and add an `OPENAI_API_KEY` (that one costs money).
+`LLM_PROVIDER=openai` and add an `OPENAI_API_KEY`.
 
 ```bash
 python selftest.py                                 # offline checks, no key needed
