@@ -61,19 +61,39 @@ with what the research community says.
 
 ## Results
 
-Numbers pending a full run. The framework and every script are done and tested; I just
-need to run the 42 attacks through a model to fill this in. Run the scripts below to
-generate `results/asr_chart.png` and this table:
+Run on OpenAI (`gpt-4o-mini` as the agent, `gpt-4o` as the judge), all 42 attacks:
 
 | Setup | Attack success rate |
 |-------|--------------------|
-| Baseline, no defense | _pending run_ |
-| Input sanitization only | _pending run_ |
-| Prompt hardening only | _pending run_ |
-| All three layers | _pending run_ |
+| Baseline, no defense | 19% (8/42) |
+| Input sanitization only | 19% (8/42) |
+| Prompt hardening only | 2% (1/42) |
+| Output monitoring only | 19% (8/42) |
+| All three layers | 5% (2/42) |
 
-The exact numbers depend on the model. The interesting part is the per-category breakdown,
-where indirect injection is usually the hardest to stop.
+![Baseline vs defended ASR by category](results/asr_chart.png)
+
+The per-category breakdown is where it gets interesting. At baseline, two categories carry
+the entire 19%: goal hijacking got through **every** time (7/7) and indirect web injection
+got through once (1/7). Direct overrides, role-switching, encoding tricks, and payload
+splitting all failed outright against `gpt-4o-mini` — the model already refuses the obvious
+stuff on its own.
+
+Three things stand out:
+
+- **Prompt hardening does almost all the work.** On its own it drops the rate from 19% to
+  2%, because it kills goal hijacking (7/7 → 0/7). Input sanitization and output monitoring,
+  each on their own, move the number by nothing — 19% unchanged.
+- **Input sanitization is useless against indirect injection, exactly as predicted.** The
+  one indirect_web attack that lands at baseline still lands under every single defense
+  setup, including all three combined. Its payload arrives inside fetched page content,
+  after the input filter already ran on the user's message. That's the whole thesis of the
+  project, and the numbers show it cleanly: indirect_web is 1/7 in every column.
+- **More layers isn't strictly better.** All three combined (5%) is actually slightly worse
+  than hardening alone (2%) — one goal-hijacking attack that hardening blocked slips through
+  in the combined run. With a judge model in the loop there's some run-to-run variance, but
+  it's a good reminder that stacking defenses can interact in non-obvious ways rather than
+  monotonically improving.
 
 `llm.py` defaults to Gemini's free tier, but its per-minute quota is too low to push all 42
 attacks through in one sitting, so I run the benchmark on OpenAI instead (`LLM_PROVIDER=openai`).
